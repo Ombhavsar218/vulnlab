@@ -1,0 +1,26 @@
+# Django local database
+
+db.sqlite3
+
+# Python cache
+
+**pycache**/
+*.py[cod]
+
+# Virtual environment (if you create one)
+
+venv/
+env/
+.venv/
+
+# Environment variables (future use)
+
+.env
+
+# VS Code settings (optional but recommended)
+
+.vscode/
+
+# Log files (if generated later)
+
+*.log
