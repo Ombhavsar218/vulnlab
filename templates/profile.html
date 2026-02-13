@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - SecureCorp Portal{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-6xl mx-auto py-12 px-4">
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-white flex items-center">
+                <i class="fas fa-id-card mr-3 text-blue-500"></i>Employee Profile
+            </h1>
+            <p class="text-slate-400 mt-2 font-medium">Manage your personal information and public professional profile.</p>
+        </div>
+        <div class="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shadow-lg">
+            {{ user_initials|default:"JD" }}
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+        <!-- Sidebar Info -->
+        <div class="space-y-6">
+            <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Account Status</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm">Role</span>
+                        <span class="text-white text-sm font-medium">Standard User</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 text-sm">Employee ID</span>
+                        <span class="text-white text-sm font-mono">SC-4920</span>
+                    </div>
+                    <div class="pt-4 border-t border-slate-700">
+                        <div class="flex items-center text-green-500 text-xs font-bold">
+                            <i class="fas fa-check-circle mr-2"></i> VERIFIED EMPLOYEE
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-3xl">
+                <h3 class="text-blue-400 font-bold flex items-center mb-2 text-sm">
+                    <i class="fas fa-info-circle mr-2"></i> PROFILE TIP
+                </h3>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    Your bio is visible to all employees in the directory. Keep it professional!
+                </p>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <div class="md:col-span-2">
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl">
+                <h2 class="text-xl font-bold text-white mb-6">Edit Personal Details</h2>
+                
+                {% if success %}
+                <div class="mb-6 p-4 bg-green-500/10 border border-green-500 text-green-400 rounded-xl flex items-center">
+                    <i class="fas fa-check-circle mr-3"></i>
+                    Profile updated successfully!
+                </div>
+                {% endif %}
+
+                <form method="POST" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="full_name" class="block text-sm font-medium text-slate-400 mb-2">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" value="{{ user_name|default:'John Doe' }}"
+                                class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-400 mb-2">Email Address</label>
+                            <input type="text" id="email" name="email" value="{{ user_email|default:'john.doe@securecorp.com' }}"
+                                class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="bio" class="block text-sm font-medium text-slate-400 mb-2">Professional Bio (XSS Test Area)</label>
+                        <textarea id="bio" name="bio" rows="6"
+                            class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition"
+                            placeholder="Tell your colleagues about yourself...">{{ user_bio|default:'' }}</textarea>
+                        <p class="mt-2 text-xs text-slate-500">Supports HTML formatting for styling.</p>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl transition shadow-lg shadow-blue-500/20 transform active:scale-95">
+                            SAVE CHANGES
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Stored Data Display -->
+            <div class="mt-8 bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-xl">
+                <h3 class="text-lg font-bold text-white mb-4">Public Bio Preview</h3>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-700 prose prose-invert max-w-none">
+                    {% if user_bio %}
+                        {{ user_bio|safe }}
+                    {% else %}
+                        <p class="text-slate-500 italic">No bio has been set yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

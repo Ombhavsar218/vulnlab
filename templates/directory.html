@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Directory - SecureCorp Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white flex items-center">
+            <i class="fas fa-address-book mr-3 text-blue-500"></i>Employee Directory
+        </h1>
+        <p class="text-slate-400 mt-2 font-medium">A complete list of SecureCorp staff members and their departments.</p>
+    </div>
+
+    <!-- Directory Table -->
+    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-slate-300">
+                <thead class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 font-bold">Employee</th>
+                        <th class="px-6 py-4 font-bold">Email</th>
+                        <th class="px-6 py-4 font-bold">Department</th>
+                        <th class="px-6 py-4 font-bold">Office</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700">
+                    {% if employees %}
+                        {% for row in employees %}
+                        <tr class="hover:bg-slate-700/30 transition">
+                            <td class="px-6 py-4 font-medium text-white flex items-center">
+                                <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center mr-3 text-xs text-blue-400">
+                                    {{ row.0|slice:":1" }}
+                                </div>
+                                {{ row.0 }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">{{ row.1 }}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20">
+                                    {{ row.2 }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">Main HQ</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                                No employees found in the directory.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}File Upload - SecureCorp Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8 px-4">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white flex items-center">
+            <i class="fas fa-file-upload mr-3 text-blue-500"></i>Document Management
+        </h1>
+        <p class="text-slate-400 mt-2 font-medium">Securely upload and manage corporate assets and internal documents.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Upload Section -->
+        <div class="space-y-6">
+            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl">
+                <h2 class="text-xl font-bold text-white mb-6">Upload New File</h2>
+                
+                {% if message %}
+                <div class="mb-6 p-4 {% if success %}bg-green-500/10 border-green-500 text-green-400{% else %}bg-red-500/10 border-red-500 text-red-400{% endif %} border rounded-xl flex items-center">
+                    <i class="fas {% if success %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} mr-3"></i>
+                    {{ message }}
+                </div>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="flex items-center justify-center w-full">
+                        <label for="file-upload" class="flex flex-col items-center justify-center w-full h-64 border-2 border-slate-700 border-dashed rounded-3xl cursor-pointer bg-slate-900/50 hover:bg-slate-900 hover:border-blue-500 transition duration-300">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-slate-500 mb-4"></i>
+                                <p class="mb-2 text-sm text-slate-400"><span class="font-bold">Click to upload</span> or drag and drop</p>
+                                <p class="text-xs text-slate-500">Any file type is accepted (Images, PDFs, etc.)</p>
+                            </div>
+                            <input id="file-upload" name="uploaded_file" type="file" class="hidden" onchange="previewFile()" />
+                        </label>
+                    </div>
+                    
+                    <!-- Preview Area -->
+                    <div id="preview-area" class="hidden bg-slate-900 p-4 rounded-2xl border border-slate-700">
+                        <p class="text-xs font-bold text-slate-500 uppercase mb-3">File Preview</p>
+                        <div class="flex items-center space-x-4">
+                            <div id="preview-icon" class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-blue-500">
+                                <i class="fas fa-file text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p id="preview-name" class="text-sm font-bold text-white truncate"></p>
+                                <p id="preview-size" class="text-xs text-slate-500"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition shadow-lg shadow-blue-500/20 transform active:scale-95">
+                        START UPLOAD
+                    </button>
+                </form>
+            </div>
+
+            <!-- Security Warning (Lab Note) -->
+            <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-2xl">
+                <h3 class="text-blue-400 font-bold flex items-center mb-2 text-sm">
+                    <i class="fas fa-shield-alt mr-2"></i> SECURITY NOTE
+                </h3>
+                <p class="text-slate-400 text-xs leading-relaxed">
+                    This module is used for testing unrestricted file uploads. No server-side extension validation is performed.
+                </p>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-white">Upload History</h2>
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Recent 10 Files</span>
+            </div>
+            <div class="flex-1 overflow-y-auto max-h-[600px]">
+                <div class="divide-y divide-slate-700">
+                    {% if upload_history %}
+                        {% for file in upload_history %}
+                        <div class="p-6 hover:bg-slate-700/30 transition flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-slate-400">
+                                <i class="fas fa-file-alt text-xl"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-bold text-white truncate">{{ file.name }}</p>
+                                <p class="text-xs text-slate-500">Uploaded by System User</p>
+                            </div>
+                            <div class="text-right">
+                                <a href="{{ file.url }}" target="_blank" class="text-blue-500 hover:text-blue-400 text-sm font-bold">
+                                    <i class="fas fa-external-link-alt"></i> View
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="p-12 text-center text-slate-500">
+                            <i class="fas fa-history text-4xl mb-4 block"></i>
+                            No upload history found.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewFile() {
+    const file = document.getElementById('file-upload').files[0];
+    const previewArea = document.getElementById('preview-area');
+    const previewName = document.getElementById('preview-name');
+    const previewSize = document.getElementById('preview-size');
+    
+    if (file) {
+        previewArea.classList.remove('hidden');
+        previewName.textContent = file.name;
+        previewSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+    } else {
+        previewArea.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

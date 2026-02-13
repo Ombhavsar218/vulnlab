@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Internal Records Lookup - SecureCorp Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Header Section -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white flex items-center">
+            <i class="fas fa-database mr-3 text-blue-500"></i>Internal Records Lookup
+        </h1>
+        <p class="text-slate-400 mt-2 font-medium">Search the corporate document vault and secure database records.</p>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl mb-8">
+        <form method="GET" action="/search/" class="grid md:grid-cols-4 gap-4">
+            <div class="md:col-span-2">
+                <label for="q" class="block text-sm font-medium text-slate-400 mb-2">Record ID or Keyword</label>
+                <div class="relative">
+                    <input type="text" id="q" name="q" value="{{ query|default:'' }}"
+                        class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full pl-10 p-3 transition"
+                        placeholder="e.g. DOC-123 or username...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-file-invoice text-slate-500"></i>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <label for="filter" class="block text-sm font-medium text-slate-400 mb-2">Record Category</label>
+                <select id="filter" name="filter" 
+                    class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition">
+                    <option value="all" {% if filter == 'all' %}selected{% endif %}>All Records</option>
+                    <option value="audit" {% if filter == 'audit' %}selected{% endif %}>Audit Logs</option>
+                    <option value="finance" {% if filter == 'finance' %}selected{% endif %}>Financial Docs</option>
+                </select>
+            </div>
+            <div class="flex items-end">
+                <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition shadow-lg shadow-blue-500/20">
+                    Fetch Records
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Area -->
+    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+        <div class="p-6 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-white">Matching Records</h2>
+            {% if query %}
+            <span class="text-slate-400 text-sm">Query: <span class="text-blue-400 font-mono">"{{ query|safe }}"</span></span>
+            {% endif %}
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-slate-300">
+                <thead class="bg-slate-900/50 text-slate-400 text-xs uppercase tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 font-bold">Record ID</th>
+                        <th class="px-6 py-4 font-bold">Associated User</th>
+                        <th class="px-6 py-4 font-bold">Category</th>
+                        <th class="px-6 py-4 font-bold">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700">
+                    {% if results %}
+                        {% for row in results %}
+                        <tr class="hover:bg-slate-700/30 transition">
+                            <td class="px-6 py-4 font-mono text-blue-400">{{ row.id }}</td>
+                            <td class="px-6 py-4 text-white font-medium">{{ row.user }}</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-slate-900 rounded-lg text-slate-400 text-xs border border-slate-700 font-bold uppercase tracking-wider">
+                                    {{ row.category }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-400 italic">
+                                {{ row.action }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-slate-500">
+                                <i class="fas fa-folder-open text-4xl mb-4 block"></i>
+                                No records found matching your search.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Vulnerability Note (Invisible to User, but for Lab testing) -->
+    <div class="mt-8 p-4 bg-slate-900/50 border border-slate-800 rounded-xl text-xs text-slate-600">
+        Lab Note: This page is vulnerable to UNION-based SQL Injection via the 'q' parameter.
+    </div>
+</div>
+{% endblock %}
