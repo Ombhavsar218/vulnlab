@@ -24,6 +24,7 @@ from vulnlabapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.login_view, name='login'),
+    path('admin-login/', views.admin_login_view, name='admin_login'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('search/', views.search_view, name='search'),
     path('directory/', views.directory_view, name='directory'),
@@ -32,6 +33,8 @@ urlpatterns = [
     path('logs/', views.logs_view, name='logs'),
     path('register/', views.register_view, name='register'),
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
+    path('admin-portal/', views.admin_dashboard_view, name='admin_portal'),
+    path('browse/', views.browse_view, name='browse'),
 ]
 
 if settings.DEBUG:

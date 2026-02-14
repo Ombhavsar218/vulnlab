@@ -7,6 +7,10 @@ from django.contrib import messages
 from django.db import connection
 
 import random
+from django.http import HttpResponse
+
+ADMIN_USER = "admin"
+ADMIN_PASS = "admin123"
 
 def logs_view(request):
     # Initialize logs in session if not present
@@ -47,22 +51,38 @@ def logs_view(request):
 
 def profile_view(request):
     success = False
+    target_param = request.GET.get('email') or request.GET.get('target')
     if request.method == 'POST':
-        # VULNERABILITY: Stored XSS
-        # We store the bio directly in the session (simulating a database)
-        # and render it with |safe in the template.
-        request.session['user_name'] = request.POST.get('full_name')
-        request.session['user_email'] = request.POST.get('email')
-        request.session['user_bio'] = request.POST.get('bio')
+        # VULNERABILITY: Stored XSS + IDOR
+        # Accepts arbitrary email target and stores HTML bio without sanitization.
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        bio = request.POST.get('bio')
+        request.session['user_name'] = full_name
+        request.session['user_email'] = email
+        request.session['user_bio'] = bio
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS profiles (email TEXT PRIMARY KEY, bio TEXT)")
+            cursor.execute(f"INSERT OR REPLACE INTO profiles (email, bio) VALUES ('{email}', '{bio}')")
         success = True
 
-    user_email = request.session.get('user_email', 'john.doe@securecorp.com')
+    user_email = target_param or request.session.get('user_email', 'john.doe@securecorp.com')
     initials = user_email[:2].upper() if '@' in user_email else "JD"
+    stored_bio = request.session.get('user_bio', '')
+    if target_param:
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(f"SELECT bio FROM profiles WHERE email = '{user_email}'")
+                row = cursor.fetchone()
+                if row:
+                    stored_bio = row[0]
+            except Exception:
+                pass
     
     context = {
         'user_name': request.session.get('user_name', 'John Doe'),
         'user_email': user_email,
-        'user_bio': request.session.get('user_bio', ''),
+        'user_bio': stored_bio,
         'user_initials': initials,
         'success': success,
     }
@@ -74,13 +94,15 @@ def upload_view(request):
     
     if request.method == 'POST' and request.FILES.get('uploaded_file'):
         uploaded_file = request.FILES['uploaded_file']
-        
-        # VULNERABILITY: Unrestricted File Upload
-        # No validation of file extension or content type
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded_file.name, uploaded_file)
-        
-        message = f"File '{filename}' uploaded successfully!"
+        # VULNERABILITY: Unrestricted File Upload + Executable Acceptance
+        # Directly writes the incoming file using the original name (including executable extensions)
+        raw_name = uploaded_file.name
+        target_path = os.path.join(settings.MEDIA_ROOT, raw_name)
+        os.makedirs(os.path.dirname(target_path), exist_ok=True)
+        with open(target_path, 'wb+') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+        message = f"File '{raw_name}' uploaded successfully! Type: {uploaded_file.content_type or 'unknown'}"
         success = True
         
     # Get upload history from the media folder
@@ -120,11 +142,18 @@ def dashboard_view(request):
     return render(request, 'dashboard.html', context)
 
 def directory_view(request):
-    # Simple employee list without the search focus
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT username, email, 'Department' FROM auth_user LIMIT 10")
-        employees = cursor.fetchall()
-    
+    if 'employees' not in request.session:
+        request.session['employees'] = [
+            {'name': 'Marcus Thorne', 'email': 'm.thorne@nexus-security.io', 'dept': 'Cyber Intelligence'},
+            {'name': 'Elena Rodriguez', 'email': 'e.rodriguez@nexus-security.io', 'dept': 'Threat Response'},
+            {'name': 'Julian Vane', 'email': 'j.vane@nexus-security.io', 'dept': 'Infrastructure Security'},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@nexus-security.io', 'dept': 'Corporate Compliance'},
+            {'name': 'David Wu', 'email': 'd.wu@nexus-security.io', 'dept': 'Cloud Architecture'},
+            {'name': 'Aria Stark', 'email': 'a.stark@nexus-security.io', 'dept': 'Encryption Research'},
+            {'name': 'Robert Vance', 'email': 'r.vance@nexus-security.io', 'dept': 'Physical Security'},
+        ]
+    employees_dicts = request.session['employees']
+    employees = [(e['name'], e['email'], e['dept']) for e in employees_dicts]
     return render(request, 'directory.html', {'employees': employees})
 
 def search_view(request):
@@ -132,13 +161,13 @@ def search_view(request):
     filter_type = request.GET.get('filter', 'all')
     results = []
 
-    # Get logs from session for searching
     audit_logs = request.session.get('audit_logs', [])
 
     if query:
-        # VULNERABILITY: SQL Injection (Unsafe string concatenation)
-        # Still performs database search for "Internal Records"
-        sql_query = f"SELECT 'DOC-' || id, username, 'Internal Record' FROM auth_user WHERE username LIKE '%{query}%'"
+        sql_query = (
+            f"SELECT 'DOC-' || id, username, 'Internal Record' FROM auth_user WHERE username LIKE '%{query}%' "
+            f"UNION SELECT 'USER-' || id, email, 'User Record' FROM vuln_users WHERE username LIKE '%{query}%' OR email LIKE '%{query}%'"
+        )
         
         with connection.cursor() as cursor:
             try:
@@ -147,7 +176,6 @@ def search_view(request):
             except Exception as e:
                 pass
         
-        # Convert DB results to a common format
         formatted_results = []
         for res in results:
             formatted_results.append({
@@ -157,17 +185,33 @@ def search_view(request):
                 'action': 'System generated record'
             })
         
-        # Search through manually created Audit Logs in session
         for log in audit_logs:
             if query.lower() in log['user'].lower() or \
                query.lower() in log['id'].lower() or \
                query.lower() in log['category'].lower() or \
                query.lower() in log['action'].lower():
                 formatted_results.append(log)
+
+        employees = request.session.get('employees', [])
+        for e in employees:
+            if query.lower() in e['name'].lower() or query.lower() in e['email'].lower() or query.lower() in e['dept'].lower():
+                formatted_results.append({
+                    'id': f"EMP-{abs(hash(e['email'])) % 10000}",
+                    'user': e['email'],
+                    'category': 'DATA_LEAK',
+                    'action': f"{e['name']} | {e['dept']} | {e['email']}"
+                })
+        settings_info = request.session.get('system_settings', {})
+        for k, v in settings_info.items():
+            formatted_results.append({
+                'id': f"CFG-{abs(hash(k)) % 10000}",
+                'user': 'system',
+                'category': 'DATA_LEAK',
+                'action': f"{k}={v}"
+            })
         
         results = formatted_results
     else:
-        # When no query is provided, show all audit logs created by the user
         results = audit_logs
 
     context = {
@@ -181,21 +225,19 @@ def login_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        
-        # Hardcoded credentials
-        if email == 'superadmin@vulnlab.com' and password == 'P@ssw0rd123!':
-            request.session['user_email'] = email
-            return redirect('dashboard')
 
-        # SQL Injection Vulnerability
-        query = "SELECT * FROM auth_user WHERE email = '%s' AND password = '%s'" % (email, password)
-        
         with connection.cursor() as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS vuln_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)")
+            cursor.execute("SELECT COUNT(*) FROM vuln_users")
+            count = cursor.fetchone()[0]
+            if count == 0:
+                cursor.execute("INSERT INTO vuln_users (username, email, password) VALUES ('admin','admin@nexus-security.io','admin')")
+                cursor.execute("INSERT INTO vuln_users (username, email, password) VALUES ('john','john.doe@nexus-security.io','1234')")
+            query = f"SELECT id, username, email FROM vuln_users WHERE email = '{email}' AND password = '{password}'"
             cursor.execute(query)
             user = cursor.fetchone()
 
-        if user:
-            # For demonstration, we'll store the email in session
+        if user or (email and password and len(password) >= 3):
             request.session['user_email'] = email
             return redirect('dashboard')
         else:
@@ -216,7 +258,147 @@ def register_view(request):
         # VULNERABILITY: Weak Password Validation
         if password != confirm_password:
             return render(request, 'register.html', {'error': 'Passwords do not match'})
-        
-        return render(request, 'register.html', {'success': f'User {username} registered successfully with a weak password policy!'})
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS vuln_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)")
+            cursor.execute(f"INSERT INTO vuln_users (username, email, password) VALUES ('{username}', '{email}', '{password}')")
+        request.session['user_email'] = email
+        return redirect('dashboard')
 
     return render(request, 'register.html')
+
+def admin_dashboard_view(request):
+    if not request.session.get('admin_authenticated'):
+        if request.GET.get('override') == '1' or request.COOKIES.get('role') == 'admin' or str(request.session.get('user_email','')).endswith('@nexus-security.io'):
+            request.session['admin_authenticated'] = True
+        else:
+            return redirect('admin_login')
+    # Hidden admin data simulation
+    if 'admin_users' not in request.session:
+        request.session['admin_users'] = [
+            {'id': 1, 'username': 'superadmin', 'email': 'superadmin@vulnlab.com', 'role': 'Global Admin', 'status': 'Active'},
+            {'id': 2, 'username': 'sec_monitor', 'email': 'monitor@securecorp.com', 'role': 'Security Analyst', 'status': 'Active'},
+            {'id': 3, 'username': 'sys_backup', 'email': 'backup@vulnlab.com', 'role': 'System Service', 'status': 'Standby'},
+        ]
+    
+    if 'system_settings' not in request.session:
+        request.session['system_settings'] = {
+            'firewall_status': 'Enabled',
+            'debug_mode': 'OFF',
+            'api_logging': 'Verbose',
+            'maintenance_mode': 'Disabled',
+            'encryption_level': 'AES-256'
+        }
+    if 'employees' not in request.session:
+        request.session['employees'] = [
+            {'name': 'Marcus Thorne', 'email': 'm.thorne@nexus-security.io', 'dept': 'Cyber Intelligence'},
+            {'name': 'Elena Rodriguez', 'email': 'e.rodriguez@nexus-security.io', 'dept': 'Threat Response'},
+            {'name': 'Julian Vane', 'email': 'j.vane@nexus-security.io', 'dept': 'Infrastructure Security'},
+            {'name': 'Sarah Jenkins', 'email': 's.jenkins@nexus-security.io', 'dept': 'Corporate Compliance'},
+            {'name': 'David Wu', 'email': 'd.wu@nexus-security.io', 'dept': 'Cloud Architecture'},
+            {'name': 'Aria Stark', 'email': 'a.stark@nexus-security.io', 'dept': 'Encryption Research'},
+            {'name': 'Robert Vance', 'email': 'r.vance@nexus-security.io', 'dept': 'Physical Security'},
+        ]
+
+    # Handle setting updates
+    if request.method == 'POST':
+        if 'update_settings' in request.POST:
+            settings_dict = request.session['system_settings']
+            for key in settings_dict.keys():
+                if key in request.POST:
+                    settings_dict[key] = request.POST.get(key)
+            request.session['system_settings'] = settings_dict
+            request.session.modified = True
+            messages.success(request, "System settings updated successfully.")
+        elif request.POST.get('action') == 'delete_employee':
+            target_email = request.POST.get('email')
+            employees = request.session['employees']
+            employees = [e for e in employees if e['email'] != target_email]
+            request.session['employees'] = employees
+            request.session.modified = True
+            messages.success(request, f"Deleted employee {target_email}")
+        elif request.POST.get('action') == 'edit_employee':
+            original_email = request.POST.get('original_email')
+            name = request.POST.get('name')
+            email = request.POST.get('email')
+            dept = request.POST.get('dept')
+            employees = request.session['employees']
+            for e in employees:
+                if e['email'] == original_email:
+                    e['name'] = name
+                    e['email'] = email
+                    e['dept'] = dept
+                    break
+            request.session['employees'] = employees
+            request.session.modified = True
+            messages.success(request, f"Updated employee {original_email}")
+        elif request.POST.get('action') == 'view_employee':
+            target_email = request.POST.get('email')
+            messages.info(request, f"Viewing employee {target_email}")
+
+    edit_email = request.GET.get('edit')
+    selected = None
+    if edit_email:
+        for e in request.session['employees']:
+            if e['email'] == edit_email:
+                selected = e
+                break
+    context = {
+        'admin_users': request.session['admin_users'],
+        'audit_logs': request.session.get('audit_logs', []),
+        'system_settings': request.session['system_settings'],
+        'employees': request.session['employees'],
+        'edit_email': edit_email,
+        'selected_employee': selected
+    }
+    return render(request, 'admin_panel.html', context)
+
+def admin_login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        if (email == ADMIN_USER and password == ADMIN_PASS) or (email == 'root' and password == 'toor'):
+            request.session['admin_authenticated'] = True
+            return redirect('admin_portal')
+        with connection.cursor() as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS vuln_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, password TEXT)")
+            query = f"SELECT id FROM vuln_users WHERE email = '{email}' AND password = '{password}'"
+            try:
+                cursor.execute(query)
+                user = cursor.fetchone()
+            except Exception:
+                user = None
+        if user:
+            request.session['admin_authenticated'] = True
+            return redirect('admin_portal')
+        return render(request, 'admin_login.html', {'error': 'Invalid admin credentials'})
+    else:
+        if request.GET.get('elevate') == '1' or request.COOKIES.get('role') == 'admin':
+            request.session['admin_authenticated'] = True
+            return redirect('admin_portal')
+        return render(request, 'admin_login.html')
+
+def browse_view(request):
+    target = request.GET.get('path', settings.MEDIA_ROOT)
+    try:
+        items = os.listdir(target)
+    except Exception as e:
+        return HttpResponse(f"<h1>Directory Exposure</h1><p>Error reading: {target}</p><pre>{e}</pre>", content_type="text/html")
+    rows = []
+    for name in items:
+        p = os.path.join(target, name)
+        t = "DIR" if os.path.isdir(p) else "FILE"
+        size = os.path.getsize(p) if os.path.exists(p) and os.path.isfile(p) else "-"
+        safe_path = p.replace("\\", "/")
+        link = f"/browse/?path={safe_path}"
+        rows.append(f"<tr><td>{t}</td><td><a href='{link}'>{name}</a></td><td>{size}</td></tr>")
+    html = f"""
+    <html><head><title>Directory Exposure</title></head>
+    <body>
+    <h1>Listing: {target}</h1>
+    <table border='1' cellpadding='6' cellspacing='0'>
+    <tr><th>Type</th><th>Name</th><th>Size</th></tr>
+    {''.join(rows)}
+    </table>
+    </body></html>
+    """
+    return HttpResponse(html, content_type="text/html")

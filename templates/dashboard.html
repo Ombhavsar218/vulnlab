@@ -1,102 +1,145 @@
 {% extends 'base.html' %}
 
-{% block title %}Employee Dashboard - SecureCorp{% endblock %}
+{% block title %}Control Center - Nexus Security Portal{% endblock %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto">
+<div class="max-w-7xl mx-auto">
     <!-- Header Section -->
-    <div class="mb-10">
-        <h1 class="text-3xl font-bold text-white tracking-tight">Welcome Back, Employee</h1>
-        <p class="text-slate-400 mt-2 font-medium italic">"Securing the future, one byte at a time."</p>
+    <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between border-b border-slate-800 pb-8">
+        <div>
+            <h1 class="text-4xl font-black text-white tracking-tight">System Overview</h1>
+            <p class="text-slate-500 mt-2 font-medium">Welcome back, <span class="text-blue-400">Agent Thorne</span>. All security nodes are operational.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <div class="px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Last Auth</p>
+                <p class="text-xs text-slate-300 font-mono">2026-02-14 09:42:11 UTC</p>
+            </div>
+        </div>
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl hover:border-blue-500 transition duration-300">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-[#0f172a] p-6 rounded-3xl border border-slate-800 shadow-xl hover:border-blue-500/50 transition duration-300 group">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500">
-                    <i class="fas fa-envelope-open-text text-xl"></i>
+                <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 group-hover:scale-110 transition">
+                    <i class="fas fa-satellite text-xl"></i>
                 </div>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Unread</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Global Nodes</span>
             </div>
-            <h3 class="text-2xl font-bold text-white">12</h3>
-            <p class="text-sm text-slate-400 mt-1">Internal Messages</p>
+            <h3 class="text-3xl font-black text-white">124</h3>
+            <p class="text-xs text-slate-500 mt-1">Active encryption tunnels</p>
         </div>
-        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl hover:border-green-500 transition duration-300">
+        <div class="bg-[#0f172a] p-6 rounded-3xl border border-slate-800 shadow-xl hover:border-orange-500/50 transition duration-300 group">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-500">
-                    <i class="fas fa-tasks text-xl"></i>
+                <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-orange-500 group-hover:scale-110 transition">
+                    <i class="fas fa-user-secret text-xl"></i>
                 </div>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Active</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Identities</span>
             </div>
-            <h3 class="text-2xl font-bold text-white">4</h3>
-            <p class="text-sm text-slate-400 mt-1">Pending Tasks</p>
+            <h3 class="text-3xl font-black text-white">8,421</h3>
+            <p class="text-xs text-slate-500 mt-1">Monitored corporate profiles</p>
         </div>
-        <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl hover:border-purple-500 transition duration-300">
+        <div class="bg-[#0f172a] p-6 rounded-3xl border border-slate-800 shadow-xl hover:border-emerald-500/50 transition duration-300 group">
             <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500">
-                    <i class="fas fa-shield-alt text-xl"></i>
+                <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 group-hover:scale-110 transition">
+                    <i class="fas fa-microchip text-xl"></i>
                 </div>
-                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Status</span>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Resources</span>
             </div>
-            <h3 class="text-2xl font-bold text-white">Secure</h3>
-            <p class="text-sm text-slate-400 mt-1">Account Health</p>
+            <h3 class="text-3xl font-black text-white">98%</h3>
+            <p class="text-xs text-slate-500 mt-1">Infrastructure integrity</p>
+        </div>
+        <div class="bg-[#0f172a] p-6 rounded-3xl border border-slate-800 shadow-xl hover:border-red-500/50 transition duration-300 group">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center text-red-500 group-hover:scale-110 transition">
+                    <i class="fas fa-radiation-alt text-xl"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Alerts</span>
+            </div>
+            <h3 class="text-3xl font-black text-white">3</h3>
+            <p class="text-xs text-slate-500 mt-1">High-priority intercepts</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Recent Activity -->
-        <div class="lg:col-span-2 bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
-            <div class="p-6 border-b border-slate-700 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white">Recent Activity</h2>
-                <button class="text-xs font-bold text-blue-500 hover:text-blue-400 uppercase tracking-widest">View All</button>
+        <div class="lg:col-span-2 bg-[#0f172a] rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-history mr-3 text-blue-500"></i>
+                    Node Activity Log
+                </h2>
+                <button class="text-xs font-bold text-blue-500 hover:text-blue-400 uppercase tracking-widest">History</button>
             </div>
-            <div class="divide-y divide-slate-700">
-                <div class="p-6 hover:bg-slate-700/30 transition flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-blue-500">
-                        <i class="fas fa-sign-in-alt"></i>
+            <div class="divide-y divide-slate-800">
+                <div class="p-6 hover:bg-slate-800/30 transition flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center text-blue-500">
+                        <i class="fas fa-network-wired"></i>
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-bold text-white">System Login</p>
-                        <p class="text-xs text-slate-500">Successfully logged in from IP 192.168.1.45</p>
+                        <p class="text-sm font-bold text-white">Nexus Core Sync</p>
+                        <p class="text-xs text-slate-500">Encrypted link established with Node-Alpha (HK-Region)</p>
                     </div>
-                    <span class="text-xs text-slate-600 font-mono">2 mins ago</span>
+                    <span class="text-[10px] text-slate-600 font-mono font-bold">LIVE</span>
                 </div>
-                <div class="p-6 hover:bg-slate-700/30 transition flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-green-500">
-                        <i class="fas fa-file-upload"></i>
+                <div class="p-6 hover:bg-slate-800/30 transition flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center text-emerald-500">
+                        <i class="fas fa-shield-virus"></i>
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-bold text-white">Document Uploaded</p>
-                        <p class="text-xs text-slate-500">"Q4_Security_Report.pdf" was added to records</p>
+                        <p class="text-sm font-bold text-white">Protocol Updated</p>
+                        <p class="text-xs text-slate-500">Threat signatures updated to version 12.0.4</p>
                     </div>
-                    <span class="text-xs text-slate-600 font-mono">1 hour ago</span>
+                    <span class="text-[10px] text-slate-600 font-mono font-bold">42M AGO</span>
                 </div>
-                <div class="p-6 hover:bg-slate-700/30 transition flex items-center space-x-4">
-                    <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-purple-500">
-                        <i class="fas fa-user-edit"></i>
+                <div class="p-6 hover:bg-slate-800/30 transition flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-xl flex items-center justify-center text-purple-500">
+                        <i class="fas fa-fingerprint"></i>
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-bold text-white">Profile Updated</p>
-                        <p class="text-xs text-slate-500">Your professional bio was modified</p>
+                        <p class="text-sm font-bold text-white">Vault Access</p>
+                        <p class="text-xs text-slate-500">Employee record #NX-4291 modified by Admin</p>
                     </div>
-                    <span class="text-xs text-slate-600 font-mono">3 hours ago</span>
+                    <span class="text-[10px] text-slate-600 font-mono font-bold">2H AGO</span>
                 </div>
             </div>
         </div>
 
-        <!-- System Search Card -->
-        <div class="bg-blue-600 rounded-3xl p-8 text-white shadow-2xl shadow-blue-500/20 relative overflow-hidden group">
-            <div class="relative z-10">
-                <h3 class="text-2xl font-bold mb-4">Search Internal Records</h3>
-                <p class="text-blue-100 mb-8 text-sm leading-relaxed">Access SecureCorp's encrypted document vault and employee records instantly.</p>
-                <form action="/search/" method="GET" class="relative">
-                    <input type="text" name="q" placeholder="Search records..." 
-                        class="w-full bg-white/10 border border-white/20 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 transition">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-white/50"></i>
-                </form>
+        <!-- Corporate Announcements -->
+        <div class="space-y-6">
+            <div class="bg-gradient-to-br from-blue-900/40 to-indigo-900/20 rounded-3xl p-8 border border-blue-500/20 shadow-2xl relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h3 class="text-xl font-bold text-white mb-4">Vault Query</h3>
+                    <p class="text-blue-200/70 mb-8 text-sm leading-relaxed">Search the encrypted document vault and personnel records instantly.</p>
+                    <form action="/search/" method="GET" class="relative">
+                        <input type="text" name="q" placeholder="NX-Record ID..." 
+                            class="w-full bg-slate-900/80 border border-slate-700 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    </form>
+                </div>
+                <i class="fas fa-atom absolute -bottom-10 -right-10 text-9xl text-white/5 opacity-20 group-hover:rotate-90 transition duration-1000"></i>
             </div>
-            <i class="fas fa-shield-alt absolute -bottom-10 -right-10 text-9xl text-white/5 opacity-20 group-hover:scale-110 transition duration-700"></i>
+
+            <div class="bg-[#0f172a] rounded-3xl p-8 border border-slate-800 shadow-xl">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">Corporate Intel</h3>
+                <div class="space-y-6">
+                    <div class="flex space-x-4">
+                        <div class="w-1 h-10 bg-blue-500 rounded-full"></div>
+                        <div>
+                            <p class="text-xs font-bold text-white">Remote Node Policy</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Mandatory 2FA upgrade for all offshore personnel starting next cycle.</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-4">
+                        <div class="w-1 h-10 bg-emerald-500 rounded-full"></div>
+                        <div>
+                            <p class="text-xs font-bold text-white">Infrastructure Maintenance</p>
+                            <p class="text-[10px] text-slate-500 mt-1">Global Vault backup scheduled for Sunday, 02:00 UTC.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

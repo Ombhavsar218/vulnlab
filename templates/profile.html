@@ -1,104 +1,113 @@
 {% extends 'base.html' %}
 
-{% block title %}My Profile - SecureCorp Portal{% endblock %}
+{% block title %}Agent Profile - Nexus Security{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-6xl mx-auto py-12 px-4">
-    <div class="mb-8 flex items-center justify-between">
+<div class="w-full max-w-6xl mx-auto py-10 px-4">
+    <div class="mb-10 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-white flex items-center">
-                <i class="fas fa-id-card mr-3 text-blue-500"></i>Employee Profile
+            <h1 class="text-4xl font-black text-white tracking-tight flex items-center">
+                <i class="fas fa-id-badge mr-4 text-blue-500"></i>Agent Dossier
             </h1>
-            <p class="text-slate-400 mt-2 font-medium">Manage your personal information and public professional profile.</p>
+            <p class="text-slate-500 mt-2 font-medium">Managing identity records for <span class="text-blue-400">Node-Alpha-7</span> personnel.</p>
         </div>
-        <div class="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center text-3xl font-bold text-white shadow-lg">
-            {{ user_initials|default:"JD" }}
+        <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-[2rem] flex items-center justify-center text-3xl font-black text-white shadow-2xl shadow-blue-500/20 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+            {{ user_initials|default:"MT" }}
         </div>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-8">
+    <div class="grid md:grid-cols-3 gap-10">
         <!-- Sidebar Info -->
-        <div class="space-y-6">
-            <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 shadow-xl">
-                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Account Status</h3>
-                <div class="space-y-4">
+        <div class="space-y-8">
+            <div class="bg-[#0f172a] p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden group">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl group-hover:bg-blue-500/10 transition-all"></div>
+                
+                <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Security Credentials</h3>
+                <div class="space-y-5">
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-400 text-sm">Role</span>
-                        <span class="text-white text-sm font-medium">Standard User</span>
+                        <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Designation</span>
+                        <span class="text-blue-400 text-xs font-black uppercase tracking-widest">Field Agent</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-slate-400 text-sm">Employee ID</span>
-                        <span class="text-white text-sm font-mono">SC-4920</span>
+                        <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Serial Key</span>
+                        <span class="text-white text-xs font-mono font-bold">NX-7742-ALPHA</span>
                     </div>
-                    <div class="pt-4 border-t border-slate-700">
-                        <div class="flex items-center text-green-500 text-xs font-bold">
-                            <i class="fas fa-check-circle mr-2"></i> VERIFIED EMPLOYEE
+                    <div class="pt-6 border-t border-slate-800/50">
+                        <div class="flex items-center text-blue-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                            <div class="w-2 h-2 rounded-full bg-blue-500 mr-3 shadow-lg shadow-blue-500/50 animate-pulse"></div>
+                            Operational Status: Active
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-blue-900/10 border border-blue-500/20 p-6 rounded-3xl">
-                <h3 class="text-blue-400 font-bold flex items-center mb-2 text-sm">
-                    <i class="fas fa-info-circle mr-2"></i> PROFILE TIP
+            <div class="bg-blue-500/5 border border-blue-500/10 p-8 rounded-[2rem]">
+                <h3 class="text-blue-400 font-black flex items-center mb-4 text-[10px] uppercase tracking-[0.2em]">
+                    <i class="fas fa-shield-virus mr-3"></i> Protocol Advisory
                 </h3>
-                <p class="text-slate-400 text-xs leading-relaxed">
-                    Your bio is visible to all employees in the directory. Keep it professional!
+                <p class="text-slate-500 text-xs leading-relaxed font-medium">
+                    Your public bio is indexed within the <span class="text-slate-300">Nexus Personnel Registry</span>. Ensure all descriptions adhere to Tier-1 information security standards.
                 </p>
             </div>
         </div>
 
         <!-- Edit Form -->
         <div class="md:col-span-2">
-            <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl">
-                <h2 class="text-xl font-bold text-white mb-6">Edit Personal Details</h2>
+            <div class="bg-[#0f172a] p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl">
+                <h2 class="text-xl font-black text-white mb-8 flex items-center uppercase tracking-widest">
+                    <i class="fas fa-edit mr-3 text-blue-500 text-sm"></i> Modify Identity Data
+                </h2>
                 
                 {% if success %}
-                <div class="mb-6 p-4 bg-green-500/10 border border-green-500 text-green-400 rounded-xl flex items-center">
-                    <i class="fas fa-check-circle mr-3"></i>
-                    Profile updated successfully!
+                <div class="mb-8 p-5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-2xl flex items-center text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-4 duration-500">
+                    <i class="fas fa-fingerprint mr-4 text-lg"></i>
+                    Dossier Synchronization Complete
                 </div>
                 {% endif %}
 
-                <form method="POST" class="space-y-6">
+                <form method="POST" class="space-y-8">
                     {% csrf_token %}
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-2 gap-8">
                         <div>
-                            <label for="full_name" class="block text-sm font-medium text-slate-400 mb-2">Full Name</label>
-                            <input type="text" id="full_name" name="full_name" value="{{ user_name|default:'John Doe' }}"
-                                class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition">
+                            <label for="full_name" class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">Legal Name</label>
+                            <input type="text" id="full_name" name="full_name" value="{{ user_name|default:'Marcus Thorne' }}"
+                                class="bg-[#0a0f1d] border border-slate-800 text-white rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 block w-full p-4 text-sm font-medium transition outline-none">
                         </div>
                         <div>
-                            <label for="email" class="block text-sm font-medium text-slate-400 mb-2">Email Address</label>
-                            <input type="text" id="email" name="email" value="{{ user_email|default:'john.doe@securecorp.com' }}"
-                                class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition">
+                            <label for="email" class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">Nexus Node Email</label>
+                            <input type="text" id="email" name="email" value="{{ user_email|default:'m.thorne@nexus-security.io' }}"
+                                class="bg-[#0a0f1d] border border-slate-800 text-white rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 block w-full p-4 text-sm font-medium transition outline-none">
                         </div>
                     </div>
                     
                     <div>
-                        <label for="bio" class="block text-sm font-medium text-slate-400 mb-2">Professional Bio (XSS Test Area)</label>
+                        <label for="bio" class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">Agent Bio (HTML Support Enabled)</label>
                         <textarea id="bio" name="bio" rows="6"
-                            class="bg-slate-900 border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block w-full p-3 transition"
-                            placeholder="Tell your colleagues about yourself...">{{ user_bio|default:'' }}</textarea>
-                        <p class="mt-2 text-xs text-slate-500">Supports HTML formatting for styling.</p>
+                            class="bg-[#0a0f1d] border border-slate-800 text-white rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 block w-full p-4 text-sm font-medium transition outline-none resize-none"
+                            placeholder="Specify your operational background...">{{ user_bio|default:'' }}</textarea>
+                        <p class="mt-3 text-[10px] text-slate-600 font-bold uppercase tracking-widest ml-1">Encryption: AES-256 Render Mode</p>
                     </div>
 
                     <div class="pt-4">
-                        <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-xl transition shadow-lg shadow-blue-500/20 transform active:scale-95">
-                            SAVE CHANGES
+                        <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-black py-4 px-12 rounded-2xl transition shadow-xl shadow-blue-500/20 transform active:scale-95 uppercase tracking-[0.2em] text-[10px]">
+                            Synchronize Dossier
                         </button>
                     </div>
                 </form>
             </div>
             
             <!-- Stored Data Display -->
-            <div class="mt-8 bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-xl">
-                <h3 class="text-lg font-bold text-white mb-4">Public Bio Preview</h3>
-                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-700 prose prose-invert max-w-none">
+            <div class="mt-10 bg-[#0f172a] p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl group hover:border-blue-500/30 transition duration-500">
+                <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6 flex items-center">
+                    <i class="fas fa-eye mr-3 text-blue-500"></i> Registry Preview
+                </h3>
+                <div class="p-8 bg-[#0a0f1d] rounded-3xl border border-slate-800/50 prose prose-invert max-w-none shadow-inner group-hover:bg-[#0a0f1d]/80 transition">
                     {% if user_bio %}
-                        {{ user_bio|safe }}
+                        <div class="text-slate-300 font-medium leading-relaxed">
+                            {{ user_bio|safe }}
+                        </div>
                     {% else %}
-                        <p class="text-slate-500 italic">No bio has been set yet.</p>
+                        <p class="text-slate-600 font-bold italic text-sm tracking-wide">Identity record contains no biographical data.</p>
                     {% endif %}
                 </div>
             </div>

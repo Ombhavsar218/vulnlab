@@ -1,95 +1,97 @@
 {% extends 'base.html' %}
 
-{% block title %}Audit Logs - SecureCorp{% endblock %}
+{% block title %}Audit Terminal - Nexus Security{% endblock %}
 
 {% block content %}
 <div class="max-w-6xl mx-auto">
     <!-- Header Section -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-white flex items-center">
-            <i class="fas fa-clipboard-list mr-3 text-blue-500"></i>System Audit Logs
+        <h1 class="text-4xl font-black text-white tracking-tight flex items-center">
+            <i class="fas fa-terminal mr-4 text-blue-500"></i>Audit Terminal
         </h1>
-        <p class="text-slate-400 mt-2 font-medium">Review internal system activities and user record modifications.</p>
+        <p class="text-slate-500 mt-2 font-medium">Monitoring <span class="text-blue-400">Nexus-Alpha-7</span> security infrastructure and personnel activity.</p>
     </div>
 
     <!-- Create New Log Form -->
-    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl p-8 mb-10">
+    <div class="bg-[#0f172a] rounded-3xl border border-slate-800 shadow-2xl p-8 mb-10 group hover:border-blue-500/30 transition duration-300">
         <h2 class="text-xl font-bold text-white mb-6 flex items-center">
-            <i class="fas fa-plus-circle mr-2 text-blue-500"></i>Create New Audit Entry
+            <i class="fas fa-fingerprint mr-2 text-blue-500"></i>Register Operational Entry
         </h2>
         <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {% csrf_token %}
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Record ID (Auto-Generated)</label>
-                <input type="text" value="{{ next_id }}" disabled 
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-blue-400 font-mono focus:outline-none opacity-70">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Record Sequence</label>
+                <input type="text" value="NX-{{ next_id }}" disabled 
+                    class="w-full bg-[#0a0f1d] border border-slate-800 rounded-xl py-3 px-4 text-blue-400 font-mono focus:outline-none opacity-70">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Associated User</label>
-                <input type="text" name="associated_user" required placeholder="e.g. admin@securecorp.com"
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Personnel Identifier</label>
+                <input type="text" name="associated_user" required placeholder="m.thorne@nexus-security.io"
+                    class="w-full bg-[#0a0f1d] border border-slate-800 rounded-xl py-3 px-4 text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 transition">
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Category</label>
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Security Tier</label>
                 <select name="category" required
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-500 transition">
-                    <option value="SECURITY">Security</option>
-                    <option value="SYSTEM">System</option>
-                    <option value="USER_MGMT">User Management</option>
-                    <option value="FILE_OPS">File Operations</option>
-                    <option value="AUTH">Authentication</option>
+                    class="w-full bg-[#0a0f1d] border border-slate-800 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-blue-500 transition">
+                    <option value="CRITICAL">Tier 1: Critical Systems</option>
+                    <option value="SECURITY">Tier 2: Network Security</option>
+                    <option value="INTEL">Tier 3: Cyber Intelligence</option>
+                    <option value="ACCESS">Tier 4: Access Control</option>
+                    <option value="SYSTEM">Tier 5: System Maintenance</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Action Description</label>
-                <input type="text" name="action" required placeholder="Describe the activity..."
-                    class="w-full bg-slate-900 border border-slate-700 rounded-xl py-3 px-4 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition">
+                <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Operational Detail</label>
+                <input type="text" name="action" required placeholder="Specify security event..."
+                    class="w-full bg-[#0a0f1d] border border-slate-800 rounded-xl py-3 px-4 text-white placeholder-slate-700 focus:outline-none focus:border-blue-500 transition">
             </div>
             <div class="md:col-span-2 flex justify-end mt-4">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200">
-                    Register Audit Entry
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-black py-3 px-10 rounded-xl shadow-lg shadow-blue-500/20 transition duration-200 uppercase tracking-widest text-xs">
+                    Authorize Entry
                 </button>
             </div>
         </form>
     </div>
 
     <!-- Table Container -->
-    <div class="bg-slate-800 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
+    <div class="bg-[#0f172a] rounded-3xl border border-slate-800 shadow-2xl overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-slate-900/50 border-b border-slate-700">
-                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Record ID</th>
-                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Associated User</th>
-                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Category</th>
-                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Action</th>
+                    <tr class="bg-[#0a0f1d] border-b border-slate-800">
+                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Seq ID</th>
+                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Agent / Node</th>
+                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Classification</th>
+                        <th class="p-6 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Activity Log</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-700">
+                <tbody class="divide-y divide-slate-800">
                     {% for log in logs %}
-                    <tr class="hover:bg-slate-700/30 transition">
-                        <td class="p-6 text-sm font-mono text-blue-400">{{ log.id }}</td>
+                    <tr class="hover:bg-slate-800/30 transition group">
+                        <td class="p-6 text-sm font-mono text-blue-400">NX-{{ log.id }}</td>
                         <td class="p-6">
                             <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center text-[10px] font-bold text-white">
+                                <div class="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center text-[10px] font-black text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition">
                                     {{ log.user|slice:":2"|upper }}
                                 </div>
-                                <span class="text-sm font-medium text-white">{{ log.user }}</span>
+                                <span class="text-sm font-bold text-white">{{ log.user }}</span>
                             </div>
                         </td>
                         <td class="p-6">
-                            <span class="px-3 py-1 bg-slate-900 rounded-full text-[10px] font-bold text-slate-400 uppercase tracking-widest border border-slate-700">
+                            <span class="px-3 py-1 bg-[#0a0f1d] rounded-lg text-[10px] font-black text-slate-400 uppercase tracking-widest border border-slate-800">
                                 {{ log.category }}
                             </span>
                         </td>
-                        <td class="p-6 text-sm text-slate-300">{{ log.action }}</td>
+                        <td class="p-6 text-sm text-slate-400 group-hover:text-white transition">{{ log.action }}</td>
                     </tr>
                     {% empty %}
                     <tr>
                         <td colspan="4" class="p-12 text-center">
                             <div class="flex flex-col items-center">
-                                <i class="fas fa-folder-open text-4xl text-slate-700 mb-4"></i>
-                                <p class="text-slate-500 font-medium">No audit logs found in the system database.</p>
+                                <div class="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mb-4">
+                                    <i class="fas fa-database text-2xl text-slate-700"></i>
+                                </div>
+                                <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">No active logs in sequence</p>
                             </div>
                         </td>
                     </tr>
