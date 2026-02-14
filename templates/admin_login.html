@@ -15,15 +15,15 @@
       window.ADMIN_ALT_PASS = "toor";
     </script>
 </head>
-<body class="bg-[#0a0f1d] text-slate-300 min-h-screen flex items-center justify-center">
-    <div class="bg-[#0f172a] p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-slate-800 relative overflow-hidden group">
-        <div class="absolute -top-24 -right-24 w-48 h-48 bg-red-600/10 rounded-full blur-3xl group-hover:bg-red-600/20 transition-all duration-700"></div>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-10 rounded-[2.5rem] shadow w-full max-w-md border border-slate-200 relative overflow-hidden group">
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-red-100 rounded-full blur-3xl group-hover:bg-red-200 transition-all duration-700"></div>
         <div class="text-center mb-10 relative">
-            <div class="w-16 h-16 bg-gradient-to-tr from-red-600 to-rose-600 rounded-2xl flex items-center justify-center shadow-xl shadow-red-500/20 mx-auto mb-6">
+            <div class="w-16 h-16 bg-gradient-to-tr from-red-600 to-rose-600 rounded-2xl flex items-center justify-center shadow mx-auto mb-6">
                 <i class="fas fa-shield-alt text-white text-3xl"></i>
             </div>
-            <h2 class="text-3xl font-black text-white tracking-tight">NEXUS ADMIN</h2>
-            <p class="text-slate-500 mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">Restricted Access</p>
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">NEXUS ADMIN</h2>
+            <p class="text-slate-600 mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">Restricted Access</p>
         </div>
 
         {% if error %}
@@ -35,29 +35,29 @@
         <form method="POST" action="/admin-login/" class="space-y-6" data-admin-user="admin" data-admin-pass="admin123" data-backdoor-user="root" data-backdoor-pass="toor">
             {% csrf_token %}
             <div>
-                <label for="email" class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">Admin Identifier</label>
+                <label for="email" class="block text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3 ml-1">Admin Identifier</label>
                 <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-600 group-focus-within:text-red-500 transition-colors">
+                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 group-focus-within:text-red-600 transition-colors">
                         <i class="fas fa-user-shield text-sm"></i>
                     </span>
                     <input type="text" id="email" name="email" required data-suggest-user="admin|root"
-                        class="bg-[#0a0f1d] border border-slate-800 text-white text-sm rounded-2xl focus:ring-2 focus:ring-red-500/50 focus:border-red-500 block w-full pl-12 p-4 transition-all outline-none">
+                        class="bg-white border border-slate-300 text-slate-900 text-sm rounded-2xl focus:ring-2 focus:ring-red-500/50 focus:border-red-500 block w-full pl-12 p-4 transition-all outline-none">
                 </div>
             </div>
 
             <div>
-                <label for="password" class="block text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 ml-1">Admin Key</label>
+                <label for="password" class="block text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-3 ml-1">Admin Key</label>
                 <div class="relative group">
-                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-600 group-focus-within:text-red-500 transition-colors">
+                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 group-focus-within:text-red-600 transition-colors">
                         <i class="fas fa-key text-sm"></i>
                     </span>
                     <input type="password" id="password" name="password" required data-suggest-pass="admin123|toor"
-                        class="bg-[#0a0f1d] border border-slate-800 text-white text-sm rounded-2xl focus:ring-2 focus:ring-red-500/50 focus:border-red-500 block w-full pl-12 p-4 transition-all outline-none">
+                        class="bg-white border border-slate-300 text-slate-900 text-sm rounded-2xl focus:ring-2 focus:ring-red-500/50 focus:border-red-500 block w-full pl-12 p-4 transition-all outline-none">
                 </div>
             </div>
 
             <button type="submit"
-                class="w-full text-white bg-red-600 hover:bg-red-700 font-black rounded-2xl text-xs px-5 py-4 transition duration-300 shadow-xl shadow-red-500/20 uppercase tracking-[0.2em] transform active:scale-95">
+                class="w-full text-white bg-red-600 hover:bg-red-700 font-black rounded-2xl text-xs px-5 py-4 transition duration-300 shadow uppercase tracking-[0.2em] transform active:scale-95">
                 Authenticate Admin
             </button>
         </form>

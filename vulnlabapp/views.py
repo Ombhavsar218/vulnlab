@@ -268,10 +268,7 @@ def register_view(request):
 
 def admin_dashboard_view(request):
     if not request.session.get('admin_authenticated'):
-        if request.GET.get('override') == '1' or request.COOKIES.get('role') == 'admin' or str(request.session.get('user_email','')).endswith('@nexus-security.io'):
-            request.session['admin_authenticated'] = True
-        else:
-            return redirect('admin_login')
+        return redirect('admin_login')
     # Hidden admin data simulation
     if 'admin_users' not in request.session:
         request.session['admin_users'] = [
@@ -372,9 +369,6 @@ def admin_login_view(request):
             return redirect('admin_portal')
         return render(request, 'admin_login.html', {'error': 'Invalid admin credentials'})
     else:
-        if request.GET.get('elevate') == '1' or request.COOKIES.get('role') == 'admin':
-            request.session['admin_authenticated'] = True
-            return redirect('admin_portal')
         return render(request, 'admin_login.html')
 
 def browse_view(request):

@@ -7,18 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-[#0a0f1d] text-slate-300 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
     <main class="flex-grow flex flex-col min-h-0">
         {% if request.path != '/' and request.path != '/register/' and request.path != '/register' %}
-        <nav class="bg-[#0f172a] p-4 border-b border-slate-800 sticky top-0 z-50 shadow-lg">
+        <nav class="bg-white p-4 border-b border-slate-200 sticky top-0 z-50 shadow">
             <div class="container mx-auto flex justify-between items-center">
                 <a href="/dashboard" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow">
                         <i class="fas fa-nexus-aeon text-white text-xl"></i>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-xl font-extrabold text-white tracking-tight leading-none">NEXUS</span>
-                        <span class="text-[10px] font-bold text-blue-500 uppercase tracking-[0.2em] mt-1">Security Solutions</span>
+                        <span class="text-xl font-extrabold text-slate-900 tracking-tight leading-none">NEXUS</span>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mt-1">Security Solutions</span>
                     </div>
                 </a>
                 
@@ -26,43 +26,43 @@
                     <!-- Notifications -->
                     <div class="relative group cursor-pointer">
                         <div class="relative">
-                            <i class="far fa-bell text-slate-400 hover:text-white transition text-lg"></i>
-                            <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 border-2 border-[#0f172a] rounded-full text-[10px] flex items-center justify-center text-white font-bold">3</span>
+                            <i class="far fa-bell text-slate-500 hover:text-slate-800 transition text-lg"></i>
+                            <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 border-2 border-white rounded-full text-[10px] flex items-center justify-center text-white font-bold">3</span>
                         </div>
                         <!-- Dropdown Preview (Static for UI) -->
-                        <div class="absolute right-0 mt-4 w-80 bg-[#1e293b] border border-slate-700 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                            <div class="p-4 border-b border-slate-700 flex justify-between items-center">
-                                <h3 class="text-sm font-bold text-white">Alert Center</h3>
-                                <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest cursor-pointer hover:underline">Clear All</span>
+                        <div class="absolute right-0 mt-4 w-80 bg-white border border-slate-200 rounded-2xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+                                <h3 class="text-sm font-bold text-slate-900">Alert Center</h3>
+                                <span class="text-[10px] text-blue-600 font-bold uppercase tracking-widest cursor-pointer hover:underline">Clear All</span>
                             </div>
                             <div class="max-h-64 overflow-y-auto">
-                                <div class="p-4 hover:bg-slate-800/50 transition border-b border-slate-700/50">
-                                    <p class="text-xs text-slate-300 font-medium"><span class="text-blue-400">Security:</span> Unusual login detected from HK region.</p>
+                                <div class="p-4 hover:bg-slate-100 transition border-b border-slate-200">
+                                    <p class="text-xs text-slate-700 font-medium"><span class="text-blue-600">Security:</span> Unusual login detected from HK region.</p>
                                     <p class="text-[10px] text-slate-500 mt-1">12 minutes ago</p>
                                 </div>
-                                <div class="p-4 hover:bg-slate-800/50 transition border-b border-slate-700/50">
-                                    <p class="text-xs text-slate-300 font-medium"><span class="text-green-400">System:</span> Weekly backup completed successfully.</p>
+                                <div class="p-4 hover:bg-slate-100 transition border-b border-slate-200">
+                                    <p class="text-xs text-slate-700 font-medium"><span class="text-emerald-600">System:</span> Weekly backup completed successfully.</p>
                                     <p class="text-[10px] text-slate-500 mt-1">2 hours ago</p>
                                 </div>
-                                <div class="p-4 hover:bg-slate-800/50 transition">
-                                    <p class="text-xs text-slate-300 font-medium"><span class="text-purple-400">HR:</span> New policy update regarding remote access.</p>
+                                <div class="p-4 hover:bg-slate-100 transition">
+                                    <p class="text-xs text-slate-700 font-medium"><span class="text-purple-600">HR:</span> New policy update regarding remote access.</p>
                                     <p class="text-[10px] text-slate-500 mt-1">5 hours ago</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="h-8 w-[1px] bg-slate-800 mx-2"></div>
+                    <div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
 
                     <div class="flex items-center space-x-4">
                         <div class="text-right hidden lg:block">
-                            <p class="text-xs font-bold text-white leading-none">{{ user_email|default:"employee@nexus-security.io" }}</p>
-                            <p class="text-[9px] text-blue-500 uppercase tracking-widest mt-1 font-bold">Authenticated Personnel</p>
+                            <p class="text-xs font-bold text-slate-900 leading-none">{{ user_email|default:"employee@nexus-security.io" }}</p>
+                            <p class="text-[9px] text-blue-600 uppercase tracking-widest mt-1 font-bold">Authenticated Personnel</p>
                             {% if request.session.system_settings and request.session.system_settings.debug_mode == 'ON' %}
-                            <p class="text-[9px] text-yellow-400 uppercase tracking-widest mt-1 font-bold">Debug Mode</p>
+                            <p class="text-[9px] text-yellow-600 uppercase tracking-widest mt-1 font-bold">Debug Mode</p>
                             {% endif %}
                         </div>
-                        <div class="w-10 h-10 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center text-xs font-bold text-blue-400 shadow-inner group cursor-pointer hover:border-blue-500/50 transition">
+                        <div class="w-10 h-10 bg-slate-100 border border-slate-300 rounded-xl flex items-center justify-center text-xs font-bold text-blue-600 shadow group cursor-pointer hover:border-blue-500/50 transition">
                             {{ user_initials|default:"JD" }}
                         </div>
                     </div>
@@ -77,46 +77,46 @@
 
         <div class="flex flex-1 overflow-hidden">
             <!-- Sidebar Navigation -->
-            <aside class="w-64 bg-[#0f172a] border-r border-slate-800 hidden md:block overflow-y-auto">
+            <aside class="w-64 bg-white border-r border-slate-200 hidden md:block overflow-y-auto">
                 <div class="p-6">
                     <nav class="space-y-1.5">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4 px-3">Network Node</p>
-                        <a href="/dashboard/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/dashboard/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                        <p class="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-4 px-3">Network Node</p>
+                        <a href="/dashboard/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/dashboard/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                             <i class="fas fa-layer-group w-5"></i>
                             <span class="text-sm font-medium">Control Center</span>
                         </a>
-                        <a href="/directory/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/directory/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                        <a href="/directory/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/directory/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                             <i class="fas fa-address-book w-5"></i>
                             <span class="text-sm font-medium">Node Directory</span>
                         </a>
-                        <a href="/search/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/search/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                        <a href="/search/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/search/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                         <i class="fas fa-database w-5"></i>
                         <span class="text-sm font-medium">Vault Query</span>
                     </a>
-                    <a href="/logs/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/logs/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                    <a href="/logs/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/logs/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                         <i class="fas fa-stream w-5"></i>
                         <span class="text-sm font-medium">Audit Stream</span>
                     </a>
-                        <a href="/upload/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/upload/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                        <a href="/upload/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/upload/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                             <i class="fas fa-upload w-5"></i>
                             <span class="text-sm font-medium">Secure Upload</span>
                         </a>
-                        <a href="/profile/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/profile/' %}bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5{% else %}text-slate-400 hover:bg-slate-800 hover:text-white{% endif %} transition">
+                        <a href="/profile/" class="flex items-center space-x-3 p-3 rounded-xl {% if request.path == '/profile/' %}bg-blue-50 text-blue-700 border border-blue-200 shadow{% else %}text-slate-600 hover:bg-slate-100 hover:text-slate-900{% endif %} transition">
                             <i class="fas fa-user-shield w-5"></i>
                             <span class="text-sm font-medium">Identity Node</span>
                         </a>
                         
                         <div class="pt-8">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-4 px-3">System Access</p>
-                            <a href="#" class="flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition">
+                            <p class="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em] mb-4 px-3">System Access</p>
+                            <a href="#" class="flex items-center space-x-3 p-3 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition">
                                 <i class="fas fa-terminal w-5"></i>
                                 <span class="text-sm font-medium">Comms</span>
                             </a>
-                            <a href="/admin-portal/" class="flex items-center space-x-3 p-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition group">
+                            <a href="/admin-portal/" class="flex items-center space-x-3 p-3 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition group">
                                 <i class="fas fa-sliders-h w-5 group-hover:rotate-90 transition-transform duration-500"></i>
                                 <span class="text-sm font-medium">Settings</span>
                             </a>
-                            <a href="/" class="flex items-center space-x-3 p-3 rounded-xl text-red-400/70 hover:bg-red-500/5 hover:text-red-400 transition mt-4">
+                            <a href="/" class="flex items-center space-x-3 p-3 rounded-xl text-red-600/70 hover:bg-red-50 hover:text-red-600 transition mt-4">
                                 <i class="fas fa-power-off w-5"></i>
                                 <span class="text-sm font-medium">Disconnect</span>
                             </a>
@@ -126,7 +126,7 @@
             </aside>
 
             <!-- Main Workspace -->
-            <div class="flex-1 overflow-y-auto bg-slate-900 p-8">
+            <div class="flex-1 overflow-y-auto bg-white p-8">
                 {% block content %}{% endblock %}
             </div>
         </div>
@@ -137,7 +137,7 @@
         {% endif %}
     </main>
 
-    <footer class="bg-gray-800 p-4 text-center border-t border-gray-700 text-gray-400 text-sm">
+    <footer class="bg-white p-4 text-center border-t border-slate-200 text-slate-500 text-sm">
         &copy; 2026 Vulnerable Lab - For Educational Purposes Only
     </footer>
 </body>
